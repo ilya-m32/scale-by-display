@@ -1,0 +1,51 @@
+name: Node.js CI publish
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and lint with ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: make
+      - run: make install
+
+      - name: Get version from package.json
+        id: get_version
+        run: |
+          version=$(jq -r '.version' package.json)
+          echo "Version is $version"
+          echo "version=$version" >> $GITHUB_ENV
+
+      - name: Install dependencies.
+        run: sudo apt-get install -y gettext
+
+      - name: Make Install
+        run: make pack
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ env.version }}"
+          name: "Release v${{ env.version }}"
+          files: *.zip
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check out the codebase.
+        uses: actions/checkout@v4

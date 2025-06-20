@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.scale-by-display" path="/org/gnome/shell/extensions/scale-by-display/">
+    <key name="hide-a11y-icon" type="b">
+      <default>true</default>
+      <summary>Hide a11y icon</summary>
+      <description>Hide a11y icon from the panel</description>
+    </key>
+    <key name="default-scale-factor" type="d">
+      <default>1.0</default>
+      <summary>Default scale factor</summary>
+      <description>Scale factor to restore if extension is disabled or unknown configuration</description>
+    </key>
+    <key name="integrate-dash-to-dock" type="b">
+      <default>false</default>
+      <summary>Integrate with Dash To Dock</summary>
+      <description>Optional field. Enables Dash To Dock integration</description>
+    </key>
+    <key name="default-dash-to-dock-icon-size" type="i">
+      <default>48</default>
+      <summary>Default icon size for the Dash To Dock extension</summary>
+      <description>Optional field. Defaults to this icon size for the Dash To Dock extension if not specified elsewhere</description>
+    </key>
+    <key name="profiles" type="s">
+      <default>"{}"</default>
+      <summary>Serialized profiles list</summary>
+      <description>Serialized list of known profiles.</description>
+    </key>
+  </schema>
+</schemalist>

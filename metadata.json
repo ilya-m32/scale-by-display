@@ -1,0 +1,8 @@
+{
+  "name": "Scale By Display",
+  "description": "Extension which tweaks your font scaling and other settings based on display configuration",
+  "uuid": "scale-by-display@ilya-m.com",
+  "url": "https://github.com/ilya-m32/scale-by-display",
+  "settings-schema": "org.gnome.shell.extensions.scale-by-display",
+  "shell-version": ["46"]
+}

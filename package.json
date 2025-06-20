@@ -1,0 +1,26 @@
+{
+  "name": "scale-by-display",
+  "version": "0.1.0",
+  "description": "A TypeScript GNOME Extension to set font scale based on display config",
+  "type": "module",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilya-m32/scale-by-display.git"
+  },
+  "author": "Ilya Malyavin <mail@ilya-m.com>",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/ilya-m32/scale-by-display/issues"
+  },
+  "homepage": "https://github.com/ilya-m32/scale-by-display#readme",
+  "sideEffects": false,
+  "dependencies": {
+    "@girs/gjs": "^4.0.0-beta.23",
+    "@girs/gnome-shell": "^48.0.2",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4"
+  }
+}
