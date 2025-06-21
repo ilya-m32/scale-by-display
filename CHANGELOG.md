@@ -1,3 +1,7 @@
+# 0.3.0
+
+Remove 49 from support versions for now
+
 # 0.2.0
 
 Extend gnome shell version support
