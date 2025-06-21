@@ -21,7 +21,7 @@ Currently, this extension is in "alpha" stage but works well in multiple setups 
 
 <img src="./screenshots/pref-2.png" alt="Monitor Profiles" width="696" height="634" />
 
-<img src="./screenshots/pref-3.png" alt="Profile edit" width="696" height="634" />
+<img src="./screenshots/pref-4.png" alt="Profile edit" width="696" height="634" />
 
 ## Future plans
 
