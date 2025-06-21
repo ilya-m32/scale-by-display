@@ -1,4 +1,6 @@
 NAME=scale-by-display
+VERSION=$(shell jq -r '.version' package.json)
+PACK=$(NAME)_v$(VERSION)
 DOMAIN=ilya-m.com
 
 .PHONY: all pack install clean lint format
@@ -14,15 +16,15 @@ dist/extension.js dist/prefs.js: node_modules
 schemas/gschemas.compiled: schemas/org.gnome.shell.extensions.$(NAME).gschema.xml
 	glib-compile-schemas schemas
 
-publish/$(NAME).zip: dist/extension.js dist/prefs.js schemas/gschemas.compiled
+publish/$(PACK).zip: dist/extension.js dist/prefs.js schemas/gschemas.compiled
 	@cp -r schemas dist/
 	@cp metadata.json dist/
 	@mkdir -p publish/
-	@(cd dist && zip ../publish/$(NAME).zip -9r .)
+	@(cd dist && zip ../publish/$(PACK).zip -9r .)
 
-pack: publish/$(NAME).zip
+pack: publish/$(PACK).zip
 
-install: publish/$(NAME).zip
+install: publish/$(PACK).zip
 	@touch ~/.local/share/gnome-shell/extensions/$(NAME)@$(DOMAIN)
 	@rm -rf ~/.local/share/gnome-shell/extensions/$(NAME)@$(DOMAIN)
 	@mv dist ~/.local/share/gnome-shell/extensions/$(NAME)@$(DOMAIN)
