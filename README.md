@@ -17,15 +17,16 @@ Currently, this extension is in "alpha" stage but works well in multiple setups 
 
 ## Installation
 
+### Extension store
+gnome-shell extensions: [go here](https://extensions.gnome.org/extension/8256/scale-by-display/)
+
 ### Manual
+Go to [release page](https://github.com/ilya-m32/scale-by-display/releases) and download a release.
+
+Then, install it with `gnome-extensions` tool
 ```(bash)
-wget https://github.com/ilya-m32/scale-by-display/releases/download/v0.2.0/scale-by-display.zip
 gnome-extensions install --force scale-by-display.zip
 ```
-
-
-### Extension store
-gnome-shell extensions: [go here](https://extensions.gnome.org/extension/8256/scale-by-display/) (publishing is WIP)
 
 ## Screenshots
 
@@ -35,7 +36,7 @@ gnome-shell extensions: [go here](https://extensions.gnome.org/extension/8256/sc
 
 <img src="./screenshots/pref-4.png" alt="Profile edit" width="696" height="634" />
 
-## Future plans
+## Future ideas
 
 These features are currently not supported but may be added in the future:
 - "Flexible" profiles, allowing partial matches
