@@ -22,8 +22,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: make
-      - run: make install
 
       - name: Get version from package.json
         id: get_version
