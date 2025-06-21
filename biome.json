@@ -8,7 +8,12 @@
       "style": {
         "noNonNullAssertion": "off"
       }
-    }
+    },
+    "ignore": ["dist"]
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git"
   },
   "formatter": {
     "lineWidth": 100,

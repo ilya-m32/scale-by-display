@@ -1,8 +1,7 @@
 import type GObject from "gi://GObject";
 
 export class ManagedConnects {
-  #connections: Map<GObject.Object, { signalIds: number[] }> =
-    new Map();
+  #connections: Map<GObject.Object, { signalIds: number[] }> = new Map();
 
   connect<F extends () => unknown>(object: GObject.Object, signal: string, method: F) {
     if (!object || typeof object.connect !== "function") {
