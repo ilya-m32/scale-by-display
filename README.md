@@ -15,6 +15,18 @@ Additionally, this extension can hide the accessibility icon to reduce clutter.
 
 Currently, this extension is in "alpha" stage but works well in multiple setups I use (Debian 13 and Ubuntu 22.04 on multiple machines). Feedback and bug reports are welcomed.
 
+## Installation
+
+### Manual
+```(bash)
+wget https://github.com/ilya-m32/scale-by-display/releases/download/v0.2.0/scale-by-display.zip
+gnome-extensions install --force scale-by-display.zip
+```
+
+
+### Extension store
+gnome-shell extensions: [go here](https://extensions.gnome.org/extension/8256/scale-by-display/) (publishing is WIP)
+
 ## Screenshots
 
 <img src="./screenshots/pref-1.png" alt="Configuration page" width="696" height="634" />
