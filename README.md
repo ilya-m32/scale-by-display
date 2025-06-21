@@ -15,6 +15,12 @@ Additionally, this extension can hide the accessibility icon to reduce clutter.
 
 Currently, this extension is in "alpha" stage but works well in multiple setups I use (Debian 13 and Ubuntu 22.04 on multiple machines). Feedback and bug reports are welcomed.
 
+## Screenshots
+
+![Configuration page](./screenshots/pref-1.png)
+
+![Monitor Profiles](./screenshots/pref-2.png)
+
 ## Future plans
 
 These features are currently not supported but may be added in the future:
