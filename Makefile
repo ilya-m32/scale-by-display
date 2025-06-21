@@ -14,20 +14,21 @@ dist/extension.js dist/prefs.js: node_modules
 schemas/gschemas.compiled: schemas/org.gnome.shell.extensions.$(NAME).gschema.xml
 	glib-compile-schemas schemas
 
-$(NAME).zip: dist/extension.js dist/prefs.js schemas/gschemas.compiled
+publish/$(NAME).zip: dist/extension.js dist/prefs.js schemas/gschemas.compiled
 	@cp -r schemas dist/
 	@cp metadata.json dist/
-	@(cd dist && zip ../$(NAME).zip -9r .)
+	@mkdir -p publish/
+	@(cd dist && zip ../publish/$(NAME).zip -9r .)
 
-pack: $(NAME).zip
+pack: publish/$(NAME).zip
 
-install: $(NAME).zip
+install: publish/$(NAME).zip
 	@touch ~/.local/share/gnome-shell/extensions/$(NAME)@$(DOMAIN)
 	@rm -rf ~/.local/share/gnome-shell/extensions/$(NAME)@$(DOMAIN)
 	@mv dist ~/.local/share/gnome-shell/extensions/$(NAME)@$(DOMAIN)
 
 clean:
-	@rm -rf dist node_modules $(NAME).zip
+	@rm -rf dist node_modules publish/
 
 lint:
 	npx biome check .

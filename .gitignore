@@ -14,4 +14,5 @@ dist_ext
 web-ext-artifacts
 
 /subprojects/blueprint-compiler
+publish/
 scale-by-display.zip

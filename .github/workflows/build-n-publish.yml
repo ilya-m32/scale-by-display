@@ -41,9 +41,7 @@ jobs:
         with:
           tag_name: "v${{ env.version }}"
           name: "Release v${{ env.version }}"
-          files: *.zip
+          files: publish/*.zip
           body_path: CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check out the codebase.
-        uses: actions/checkout@v4
