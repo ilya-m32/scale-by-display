@@ -17,9 +17,11 @@ Currently, this extension is in "alpha" stage but works well in multiple setups 
 
 ## Screenshots
 
-![Configuration page](./screenshots/pref-1.png)
+<img src="./screenshots/pref-1.png" alt="Configuration page" width="696" height="634" />
 
-![Monitor Profiles](./screenshots/pref-2.png)
+<img src="./screenshots/pref-2.png" alt="Monitor Profiles" width="696" height="634" />
+
+<img src="./screenshots/pref-3.png" alt="Profile edit" width="696" height="634" />
 
 ## Future plans
 
