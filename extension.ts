@@ -111,9 +111,9 @@ export default class ScaleToDisplayExtension extends Extension {
     this.#setScalingFactor(fontScaleFactor, dashToDockIconSize);
   }
 
-  #setScalingFactor(factorFactor: number, dashToDockIconSize?: number) {
+  #setScalingFactor(fontScaleFactor: number, dashToDockIconSize?: number) {
     this.#gnomeSettingsStore ??= new Gio.Settings({ schema: GNOME_SETTINGS_SCHEMA });
-    this.#gnomeSettingsStore.set_double(FONT_SCALING_FACTOR_KEY, factorFactor);
+    this.#gnomeSettingsStore.set_double(FONT_SCALING_FACTOR_KEY, fontScaleFactor);
 
     if (dashToDockIconSize != null) {
       this.#dashToDockSettings ??= new Gio.Settings({ schema: DASH_TO_DOCK_SCHEMA });

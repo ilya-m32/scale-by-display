@@ -98,6 +98,10 @@ class MonitorsConfigDisplayScalingExtImpl extends GObject.Object {
   }
 
   #updateResourcesState(resourceState: Resource, err?: Error | string) {
+    // Reset previous state on update
+    this.#monitors = [];
+    this.#primaryMonitor = void 0;
+
     if (err) {
       logError(err);
       return;
