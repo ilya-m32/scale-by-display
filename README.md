@@ -1,5 +1,7 @@
 # Scale by Display
 
+Install from gnome-shell [extensions](https://extensions.gnome.org/extension/8256/scale-by-display/).
+
 A GNOME Shell extension that helps tune your system settings based on which displays are currently available and active.
 
 Imagine you're using a laptop and frequently connect it to different displays (at home, work, etc.) with varying Display PPIs. Sometimes, the text may appear too small or too large. While fractional scaling could be an option, it doesn't always produce optimal results and may not work well with legacy apps, or it may have rough edges. Instead, you can adjust your font scale modifier as a "good enough" solution to make the text readable again.
@@ -30,11 +32,11 @@ gnome-extensions install --force scale-by-display.zip
 
 ## Screenshots
 
-<img src="./screenshots/pref-1.png" alt="Configuration page" width="696" height="634" />
+<img src="./screenshots/pref-1.png" alt="Configuration page" max-width="696" max-height="634" />
 
-<img src="./screenshots/pref-2.png" alt="Monitor Profiles" width="696" height="634" />
+<img src="./screenshots/pref-2.png" alt="Monitor Profiles" max-width="696" max-height="634" />
 
-<img src="./screenshots/pref-4.png" alt="Profile edit" width="696" height="634" />
+<img src="./screenshots/pref-4.png" alt="Profile edit" max-width="696" max-height="634" />
 
 ## Future ideas
 
