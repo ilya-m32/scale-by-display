@@ -1,3 +1,7 @@
+# 0.4.0
+
+Fix bug with display matching when display is re-enabled multiple times.
+
 # 0.3.0
 
 Remove 49 from support versions for now
