@@ -1,6 +1,6 @@
 {
   "name": "scale-by-display",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A TypeScript GNOME Extension to set font scale based on display config",
   "type": "module",
   "private": true,
