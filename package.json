@@ -15,12 +15,11 @@
   },
   "homepage": "https://github.com/ilya-m32/scale-by-display#readme",
   "sideEffects": false,
-  "dependencies": {
-    "@girs/gjs": "^4.0.0-beta.23",
-    "@girs/gnome-shell": "^48.0.2",
-    "typescript": "^5.8.3"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@biomejs/biome": "1.9.4"
+    "@biomejs/biome": "1.9.4",
+    "@girs/gjs": "4.0.0-beta.38",
+    "@girs/gnome-shell": "49.0.1",
+    "typescript": "5.9.2"
   }
 }
