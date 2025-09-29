@@ -4,6 +4,6 @@
   "uuid": "scale-by-display@ilya-m.com",
   "url": "https://github.com/ilya-m32/scale-by-display",
   "settings-schema": "org.gnome.shell.extensions.scale-by-display",
-  "shell-version": ["46", "47", "48"],
+  "shell-version": ["46", "47", "48", "49"],
   "session-modes":  [ "unlock-dialog", "user" ]
 }
