@@ -6,6 +6,11 @@
       <summary>Hide a11y icon</summary>
       <description>Hide a11y icon from the panel</description>
     </key>
+    <key name="with-serials" type="b">
+      <default>true</default>
+      <summary>Use serial numbers</summary>
+      <description>Use display serial numbers while matching display profiles</description>
+    </key>
     <key name="default-scale-factor" type="d">
       <default>1.0</default>
       <summary>Default scale factor</summary>

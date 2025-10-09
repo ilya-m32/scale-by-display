@@ -1,3 +1,7 @@
+# 0.6.0
+
+Option to ignore display serial numbers while matching.
+
 # 0.5.0
 
 Keep the extension enabled in the lock screen state

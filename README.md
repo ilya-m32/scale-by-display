@@ -15,7 +15,7 @@ Based on the display configuration, you can automatically:
 
 Additionally, this extension can hide the accessibility icon to reduce clutter.
 
-Currently, this extension is in "alpha" stage but works well in multiple setups I use (Debian 13 and Ubuntu 22.04 on multiple machines). Feedback and bug reports are welcomed.
+Currently, this extension is in "beta" stage and works well in multiple setups I use. Feedback and bug reports are welcomed.
 
 ## Installation
 

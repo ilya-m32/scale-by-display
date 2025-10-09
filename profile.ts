@@ -20,14 +20,17 @@ class Profile {
 
   #monitorsKeysSet: Set<string>;
 
-  constructor({ monitors, name, fontScaleFactor, dashToDockIconSize }: IProfile) {
+  constructor(
+    { monitors, name, fontScaleFactor, dashToDockIconSize }: IProfile,
+    withSerials: boolean,
+  ) {
     this.#monitors = monitors;
     this.name = name;
     this.fontScaleFactor = fontScaleFactor;
     this.dashToDockIconSize = dashToDockIconSize;
 
-    const profileMonitorIdentifiers = getMonitorIdentifier(this.#monitors);
-    this.#monitorsKeysSet = new Set(getMonitorIdentifier(this.#monitors));
+    const profileMonitorIdentifiers = getMonitorIdentifier(this.#monitors, withSerials);
+    this.#monitorsKeysSet = new Set(getMonitorIdentifier(this.#monitors, withSerials));
   }
 
   getMonitorsCount() {
@@ -59,6 +62,7 @@ class ProfilesManagerImpl extends GObject.Object {
   #profiles: Profile[] = [];
   #activeProfile?: Profile | null;
   #logger: ILogger;
+  #withSerials = false;
 
   #connections = new ManagedConnects();
 
@@ -82,7 +86,10 @@ class ProfilesManagerImpl extends GObject.Object {
 
   getActiveProfile(): Profile | undefined {
     if (!this.#activeProfile) {
-      const currentMonitorIdentifiers = getMonitorIdentifier(this.#monitorsConfig.monitors);
+      const currentMonitorIdentifiers = getMonitorIdentifier(
+        this.#monitorsConfig.monitors,
+        this.#withSerials,
+      );
 
       this.#activeProfile = this.#profiles.find((profile) =>
         profile.matchesCurrentMonitors(currentMonitorIdentifiers),
@@ -97,7 +104,7 @@ class ProfilesManagerImpl extends GObject.Object {
   }
 
   appendProfile(profile: IProfile) {
-    this.#profiles.push(new Profile(profile));
+    this.#profiles.push(new Profile(profile, this.#withSerials));
 
     this.#syncProfiles();
   }
@@ -114,6 +121,8 @@ class ProfilesManagerImpl extends GObject.Object {
 
   #onUpdate(updateProfilesList = true) {
     this.#activeProfile = null;
+    this.#withSerials = this.#settings.get_boolean("with-serials") ?? true;
+
     updateProfilesList && this.#fetchProfiles();
   }
 
@@ -121,7 +130,7 @@ class ProfilesManagerImpl extends GObject.Object {
     try {
       this.#profiles = (JSON.parse(this.#settings.get_string("profiles"))?.profiles ?? []).map(
         // biome-ignore lint/suspicious/noExplicitAny: no schema parsing for now
-        (rawProfile: any) => new Profile(rawProfile),
+        (rawProfile: any) => new Profile(rawProfile, this.#withSerials),
       );
       this.emit("updated");
     } catch (error: unknown) {

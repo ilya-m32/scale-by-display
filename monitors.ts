@@ -172,11 +172,16 @@ class MonitorsConfigDisplayScalingExtImpl extends GObject.Object {
   }
 }
 
-export function getMonitorIdentifier(monitors: Monitor[]) {
+export function getMonitorIdentifier(monitors: Monitor[], withSerials: boolean) {
   return monitors
-    .map(
-      (monitor) =>
-        `${monitor.vendor}-${monitor.product}-${monitor.serial}-${monitor.active ? "active" : "inactive"}`,
+    .map((monitor) =>
+      [
+        monitor.vendor,
+        monitor.product,
+        ...(withSerials ? [monitor.serial] : []),
+        monitor.active ? "active" : "inactive",
+      ]
+        .join("-"),
     )
     .sort();
 }

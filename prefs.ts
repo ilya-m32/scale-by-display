@@ -6,7 +6,6 @@ import {
   gettext as _,
 } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
-import type { ExtensionMetadata } from "resource:///org/gnome/shell/extensions/extension.js";
 import { type Monitor, MonitorsConfig } from "./monitors.js";
 import { type ProfilesManager, getProfileManager } from "./profile.js";
 
@@ -27,6 +26,8 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
   #profilesWidgets: Adw.ActionRow[] = [];
 
   #updateMonitorList(window: Adw.Window): Adw.PreferencesGroup {
+    const withSerials = this.#settings?.get_boolean("with-serials") ?? true;
+
     this.#monitorListWidget ??= new Adw.PreferencesGroup({
       title: _("Monitors"),
       description: _("List of current monitors"),
@@ -37,7 +38,7 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
     this.#monitorRows = [];
 
     for (const monitor of this.#monitorsConfig.monitors) {
-      const monitorRow = this.#createMonitorRow(monitor);
+      const monitorRow = this.#createMonitorRow(monitor, withSerials);
 
       this.#monitorListWidget.add(monitorRow);
       this.#monitorRows.push(monitorRow);
@@ -63,8 +64,11 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
     return this.#monitorListWidget;
   }
 
-  #createMonitorRow(monitor: Monitor): Adw.ActionRow {
-    const title = `${monitor.index}: ${monitor.vendor} ${monitor.product}`;
+  #createMonitorRow(monitor: Monitor, withSerials: boolean): Adw.ActionRow {
+    const title = [
+      `${monitor.index}: ${monitor.vendor} ${monitor.product}`,
+      withSerials ? ` (${monitor.serial})` : "",
+    ].join("");
 
     const monitorRow = new Adw.ActionRow({
       title,
@@ -119,6 +123,8 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
   }
 
   #onChangeProfile(window: Adw.Window, opts: { type: "add" } | { type: "update"; idx: number }) {
+    const withSerials = this.#settings?.get_boolean("with-serials") ?? true;
+
     const currentProfile =
       opts.type === "update" ? this.#profilesManager!.getActiveProfile() : null;
 
@@ -201,8 +207,8 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
       this.#settings!.get_boolean("integrate-dash-to-dock") ?? false;
     dashToDockIconSizeRow.set_value(
       currentProfile?.dashToDockIconSize ??
-        this.#settings!.get_int("default-dash-to-dock-icon-size") ??
-        32,
+      this.#settings!.get_int("default-dash-to-dock-icon-size") ??
+      32,
     );
     profileParametersGroup.add(dashToDockIconSizeRow);
     contentArea.append(profileParametersGroup);
@@ -216,7 +222,7 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
       marginEnd: 48,
     });
     for (const monitor of this.#monitorsConfig.monitors) {
-      monitorListWidget.add(this.#createMonitorRow(monitor));
+      monitorListWidget.add(this.#createMonitorRow(monitor, withSerials));
     }
     contentArea.append(monitorListWidget);
 
@@ -283,6 +289,14 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
     });
     this.#settings.bind("hide-a11y-icon", hideA11yIcon, "active", Gio.SettingsBindFlags.DEFAULT);
     globalSettingsGroup.add(hideA11yIcon);
+
+    // ignore serials
+    const withSerialsRow = new Adw.SwitchRow({
+      title: _("Match by serials"),
+      subtitle: _("Whether to use serial numbers while matching displays"),
+    });
+    this.#settings.bind("with-serials", withSerialsRow, "active", Gio.SettingsBindFlags.DEFAULT);
+    globalSettingsGroup.add(withSerialsRow);
 
     // default scale factor
     const defaultScaleFactor = new Adw.SpinRow({
