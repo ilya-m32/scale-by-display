@@ -1,3 +1,7 @@
+# 0.7.0
+
+Gnome 50 support (manifest)
+
 # 0.6.0
 
 Option to ignore display serial numbers while matching.
