@@ -1,3 +1,7 @@
+# 0.7.1
+
+[\#7](https://github.com/ilya-m32/scale-by-display/issues/7) fixed
+
 # 0.7.0
 
 Gnome 50 support (manifest)
