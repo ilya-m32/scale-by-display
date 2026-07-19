@@ -126,7 +126,7 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
     const withSerials = this.#settings?.get_boolean("with-serials") ?? true;
 
     const currentProfile =
-      opts.type === "update" ? this.#profilesManager!.getActiveProfile() : null;
+      opts.type === "update" ? this.#profilesManager!.getProfiles()?.[opts.idx] : null;
 
     const dialog = new Gtk.Dialog({
       title: "Change Profile",
@@ -207,8 +207,8 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
       this.#settings!.get_boolean("integrate-dash-to-dock") ?? false;
     dashToDockIconSizeRow.set_value(
       currentProfile?.dashToDockIconSize ??
-      this.#settings!.get_int("default-dash-to-dock-icon-size") ??
-      32,
+        this.#settings!.get_int("default-dash-to-dock-icon-size") ??
+        32,
     );
     profileParametersGroup.add(dashToDockIconSizeRow);
     contentArea.append(profileParametersGroup);
