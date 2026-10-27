@@ -8,7 +8,7 @@ import * as Main from "resource:///org/gnome/shell/ui/main.js";
 import { Extension, gettext as _ } from "resource:///org/gnome/shell/extensions/extension.js";
 import { QuickToggle, SystemIndicator } from "resource:///org/gnome/shell/ui/quickSettings.js";
 import { ManagedConnects } from "./managed-connects.js";
-import { MonitorsConfig } from "./monitors.js";
+import { MonitorsConfig, type MonitorsConfigType } from "./monitors.js";
 import { type ProfilesManager, getProfileManager } from "./profile.js";
 import {
   DASH_TO_DOCK_SCHEMA,
@@ -20,6 +20,7 @@ import {
 
 export default class ScaleToDisplayExtension extends Extension {
   #profileManager?: ProfilesManager | null;
+  #monitorsConfig?: MonitorsConfigType | null;
 
   #settings?: Gio.Settings | null;
   #extensionState: {
@@ -41,6 +42,7 @@ export default class ScaleToDisplayExtension extends Extension {
   enable() {
     this.#settings ??= this.getSettings(EXT_SCHEMA);
     const monitorsConfig = new MonitorsConfig();
+    this.#monitorsConfig = monitorsConfig;
 
     this.#profileManager ??= getProfileManager(
       this.#settings,
@@ -55,6 +57,22 @@ export default class ScaleToDisplayExtension extends Extension {
 
     // Initially check the current state
     onUpdate();
+    void this.#initMonitorsConfig(monitorsConfig);
+  }
+
+  async #initMonitorsConfig(monitorsConfig: MonitorsConfigType) {
+    try {
+      await monitorsConfig.init();
+    } catch (error) {
+      if (this.#monitorsConfig === monitorsConfig) {
+        this.getLogger?.().error("Failed to initialize monitor configuration", String(error));
+      }
+      return;
+    }
+
+    if (this.#monitorsConfig !== monitorsConfig) return;
+
+    this.#onStateUpdate();
   }
 
   disable() {
@@ -66,6 +84,7 @@ export default class ScaleToDisplayExtension extends Extension {
 
     this.#profileManager?.disconnectAll();
     this.#profileManager = null;
+    this.#monitorsConfig = null;
 
     this.#settings = null;
     this.#gnomeSettingsStore = null;

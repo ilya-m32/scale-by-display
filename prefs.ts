@@ -275,8 +275,15 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
     this.#profilesWidgets = [];
   }
 
-  fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
+  async fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
     this.#settings ??= this.getSettings();
+
+    try {
+      await this.#monitorsConfig.init();
+    } catch (error) {
+      this.getLogger?.().error("Failed to initialize monitor configuration", String(error));
+    }
+
     this.#profilesManager ??= getProfileManager(
       this.#settings,
       this.#monitorsConfig,
