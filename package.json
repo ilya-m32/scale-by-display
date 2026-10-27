@@ -15,6 +15,9 @@
   },
   "homepage": "https://github.com/ilya-m32/scale-by-display#readme",
   "sideEffects": false,
+  "allowScripts": {
+    "@biomejs/biome@1.9.4": true
+  },
   "dependencies": {},
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
