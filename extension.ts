@@ -59,9 +59,9 @@ export default class ScaleToDisplayExtension extends Extension {
 
   disable() {
     /**
-      * This extension affects the lock screen font scale factor as well, to maintain consistency with the main session.
-      * Otherwise, the font scale factor would flicker after locking and unlocking the screen.
-      */
+     * This extension affects the lock screen font scale factor as well, to maintain consistency with the main session.
+     * Otherwise, the font scale factor would flicker after locking and unlocking the screen.
+     */
     this.#connections.disconnectAll();
 
     this.#profileManager?.disconnectAll();

@@ -43,6 +43,10 @@ const XML_INTERFACE_SCHEMA =
 
 const initProxyWrapper = Gio.DBusProxy.makeProxyWrapper(XML_INTERFACE_SCHEMA);
 
+type ProxyWrapperConstructor = new (
+  ...args: Parameters<typeof initProxyWrapper>
+) => ReturnType<typeof initProxyWrapper>;
+
 /**
  * Based on dash-to-dock MonitorsConfig class
  * {@link https://github.com/micheleg/dash-to-dock/blob/816d585207c2964225b33ab944766b0b62e65de4/prefs.js#L41 Source}
@@ -58,7 +62,9 @@ class MonitorsConfigDisplayScalingExtImpl extends GObject.Object {
   constructor() {
     super();
 
-    initProxyWrapper(
+    // GNOME Shell 51 deprecated calling the proxy wrapper as a function;
+    // instantiating it with `new` is also supported by older versions.
+    new (initProxyWrapper as unknown as ProxyWrapperConstructor)(
       Gio.DBus.session,
       "org.gnome.Mutter.DisplayConfig",
       "/org/gnome/Mutter/DisplayConfig",
@@ -180,8 +186,7 @@ export function getMonitorIdentifier(monitors: Monitor[], withSerials: boolean) 
         monitor.product,
         ...(withSerials ? [monitor.serial] : []),
         monitor.active ? "active" : "inactive",
-      ]
-        .join("-"),
+      ].join("-"),
     )
     .sort();
 }
