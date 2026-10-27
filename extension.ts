@@ -120,8 +120,12 @@ export default class ScaleToDisplayExtension extends Extension {
     this.#gnomeSettingsStore.set_double(FONT_SCALING_FACTOR_KEY, fontScaleFactor);
 
     if (dashToDockIconSize != null) {
-      this.#dashToDockSettings ??= new Gio.Settings({ schema: DASH_TO_DOCK_SCHEMA });
-      this.#dashToDockSettings.set_int("dash-max-icon-size", dashToDockIconSize);
+      try {
+        this.#dashToDockSettings ??= new Gio.Settings({ schema: DASH_TO_DOCK_SCHEMA });
+        this.#dashToDockSettings.set_int("dash-max-icon-size", dashToDockIconSize);
+      } catch {
+        this.#dashToDockSettings = null;
+      }
     }
   }
 }
