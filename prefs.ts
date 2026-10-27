@@ -262,6 +262,19 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
     this.#updateMonitorList(window);
   }
 
+  #cleanupWindow() {
+    if (this.#profilesManagerSignal != null) {
+      this.#profilesManager?.disconnect(this.#profilesManagerSignal);
+      this.#profilesManagerSignal = void 0;
+    }
+
+    this.#saveMonitorsAsProfileButton = void 0;
+    this.#monitorListWidget = void 0;
+    this.#monitorRows = [];
+    this.#profilesGroupWidget = void 0;
+    this.#profilesWidgets = [];
+  }
+
   fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
     this.#settings ??= this.getSettings();
     this.#profilesManager ??= getProfileManager(
@@ -382,6 +395,11 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
         this.#updatePreferenceWindow.bind(this, window),
       );
     }
+
+    window.connect("close-request", () => {
+      this.#cleanupWindow();
+      return false;
+    });
 
     return Promise.resolve();
   }
