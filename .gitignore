@@ -5,6 +5,7 @@ node_modules
 
 # Generated TypeScript files and build data
 tsconfig.tsbuildinfo
+schemas/gschemas.compiled
 
 # Dist files
 dist

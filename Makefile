@@ -7,19 +7,19 @@ DOMAIN=ilya-m.com
 
 all: dist/extension.js
 
-node_modules: package.json
+node_modules: package.json package-lock.json
 	npm install
 
 dist/extension.js dist/prefs.js: node_modules
-	npx tsc
+	./node_modules/.bin/tsc
 
-schemas/gschemas.compiled: schemas/org.gnome.shell.extensions.$(NAME).gschema.xml
-	glib-compile-schemas schemas
-
-publish/$(PACK).zip: dist/extension.js dist/prefs.js schemas/gschemas.compiled
-	@cp -r schemas dist/
+publish/$(PACK).zip: dist/extension.js dist/prefs.js
+	@rm -rf dist/schemas
+	@mkdir -p dist/schemas
+	@cp schemas/*.gschema.xml dist/schemas/
 	@cp metadata.json dist/
 	@mkdir -p publish/
+	@rm -f publish/$(PACK).zip
 	@(cd dist && zip ../publish/$(PACK).zip -9r .)
 
 pack: publish/$(PACK).zip
@@ -32,8 +32,8 @@ install: publish/$(PACK).zip
 clean:
 	@rm -rf dist node_modules publish/
 
-lint:
-	npx biome check .
+lint: node_modules
+	./node_modules/.bin/biome check .
 
-format:
-	npx biome format --write .
+format: node_modules
+	./node_modules/.bin/biome format --write .

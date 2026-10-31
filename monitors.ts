@@ -1,4 +1,3 @@
-import GLib from "gi://GLib";
 import GObject from "gi://GObject";
 import Gio from "gi://Gio";
 
@@ -43,58 +42,92 @@ const XML_INTERFACE_SCHEMA =
 
 const initProxyWrapper = Gio.DBusProxy.makeProxyWrapper(XML_INTERFACE_SCHEMA);
 
+type ProxyWrapperConstructor = new (
+  ...args: Parameters<typeof initProxyWrapper>
+) => ReturnType<typeof initProxyWrapper>;
+
 /**
  * Based on dash-to-dock MonitorsConfig class
  * {@link https://github.com/micheleg/dash-to-dock/blob/816d585207c2964225b33ab944766b0b62e65de4/prefs.js#L41 Source}
  */
 class MonitorsConfigDisplayScalingExtImpl extends GObject.Object {
   #monitorsConfigProxy?: ReturnType<typeof initProxyWrapper> | null;
-  #configProxySignal: unknown;
+  #configProxySignal?: number;
   #primaryMonitor?: Monitor;
   #monitors: Monitor[] = [];
-  #hadInitRun = false;
-  #initRunSignal?: number;
+  #cancellable = new Gio.Cancellable();
+  #initPromise?: Promise<this>;
 
-  constructor() {
-    super();
+  init(): Promise<this> {
+    if (this.#cancellable.is_cancelled()) return Promise.resolve(this);
 
-    initProxyWrapper(
-      Gio.DBus.session,
-      "org.gnome.Mutter.DisplayConfig",
-      "/org/gnome/Mutter/DisplayConfig",
-      (proxyWrapper, error) => {
-        this.#monitorsConfigProxy ??= proxyWrapper;
+    this.#initPromise ??= this.#initialize();
+    return this.#initPromise;
+  }
 
-        // Connecting to a D-Bus signal
-        // biome-ignore lint/suspicious/noExplicitAny: wrong typings?
-        this.#configProxySignal = (this.#monitorsConfigProxy?.connectSignal as any)?.(
-          "MonitorsChanged",
-          this.#updateResources.bind(this),
-        );
-
-        this.#initRunSignal = GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
-          if (!this.#hadInitRun) {
-            this.#updateResources();
+  async #initialize() {
+    const proxy = await new Promise<ReturnType<typeof initProxyWrapper>>((resolve, reject) => {
+      // GNOME Shell 51 deprecated calling the proxy wrapper as a function;
+      // instantiating it with `new` is also supported by older versions.
+      new (initProxyWrapper as unknown as ProxyWrapperConstructor)(
+        Gio.DBus.session,
+        "org.gnome.Mutter.DisplayConfig",
+        "/org/gnome/Mutter/DisplayConfig",
+        (proxyWrapper, error) => {
+          if (error || !proxyWrapper) {
+            reject(error ?? new Error("Failed to initialize display config proxy"));
+            return;
           }
-          this.#initRunSignal = void 0;
-          return GLib.SOURCE_REMOVE; // Ensures this only runs once
-        });
-      },
+
+          resolve(proxyWrapper);
+        },
+        this.#cancellable,
+      );
+    });
+
+    if (this.#cancellable.is_cancelled()) return this;
+
+    this.#monitorsConfigProxy = proxy;
+
+    // biome-ignore lint/suspicious/noExplicitAny: wrong typings
+    this.#configProxySignal = (proxy.connectSignal as any)("MonitorsChanged", () =>
+      this.#updateResources(),
     );
+
+    await this.#updateResources();
+
+    return this;
   }
 
   disconnectAll() {
+    this.#cancellable.cancel();
+
     if (this.#configProxySignal != null) {
       this.#monitorsConfigProxy?.disconnectSignal(this.#configProxySignal);
+      this.#configProxySignal = void 0;
     }
-    if (this.#initRunSignal != null) {
-      GLib.Source.remove(this.#initRunSignal);
-    }
+
+    this.#monitorsConfigProxy = null;
   }
 
-  #updateResources() {
-    this.#hadInitRun = true;
-    this.#monitorsConfigProxy?.GetCurrentStateRemote(this.#updateResourcesState.bind(this));
+  async #updateResources() {
+    const proxy = this.#monitorsConfigProxy;
+    if (!proxy || this.#cancellable.is_cancelled()) return;
+
+    try {
+      // biome-ignore lint/suspicious/noExplicitAny: wrong typings?
+      const resourceState = (await (proxy as any).GetCurrentStateAsync(
+        this.#cancellable,
+      )) as Resource;
+
+      if (this.#cancellable.is_cancelled()) return;
+
+      this.#updateResourcesState(resourceState);
+    } catch (error) {
+      if (!this.#cancellable.is_cancelled()) {
+        logError(error);
+      }
+    }
   }
 
   #updateResourcesState(resourceState: Resource, err?: Error | string) {
@@ -180,8 +213,7 @@ export function getMonitorIdentifier(monitors: Monitor[], withSerials: boolean) 
         monitor.product,
         ...(withSerials ? [monitor.serial] : []),
         monitor.active ? "active" : "inactive",
-      ]
-        .join("-"),
+      ].join("-"),
     )
     .sort();
 }

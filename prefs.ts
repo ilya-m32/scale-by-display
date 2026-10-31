@@ -262,8 +262,28 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
     this.#updateMonitorList(window);
   }
 
-  fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
+  #cleanupWindow() {
+    if (this.#profilesManagerSignal != null) {
+      this.#profilesManager?.disconnect(this.#profilesManagerSignal);
+      this.#profilesManagerSignal = void 0;
+    }
+
+    this.#saveMonitorsAsProfileButton = void 0;
+    this.#monitorListWidget = void 0;
+    this.#monitorRows = [];
+    this.#profilesGroupWidget = void 0;
+    this.#profilesWidgets = [];
+  }
+
+  async fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
     this.#settings ??= this.getSettings();
+
+    try {
+      await this.#monitorsConfig.init();
+    } catch (error) {
+      this.getLogger?.().error("Failed to initialize monitor configuration", String(error));
+    }
+
     this.#profilesManager ??= getProfileManager(
       this.#settings,
       this.#monitorsConfig,
@@ -382,6 +402,11 @@ export default class ScaleToDisplayPreferences extends ExtensionPreferences {
         this.#updatePreferenceWindow.bind(this, window),
       );
     }
+
+    window.connect("close-request", () => {
+      this.#cleanupWindow();
+      return false;
+    });
 
     return Promise.resolve();
   }
