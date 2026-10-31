@@ -2,6 +2,8 @@
 
 Gnome 51 support (manifest, makeProxyWrapper constructor)
 
+Bugfix for [\#9](https://github.com/ilya-m32/scale-by-display/issues/9)
+
 # 0.7.1
 
 [\#7](https://github.com/ilya-m32/scale-by-display/issues/7) fixed
